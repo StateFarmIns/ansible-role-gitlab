@@ -79,7 +79,10 @@ gitlab_dependencies:
     - curl
     - openssl
     - tzdata
-    - "{{ 'perl' if gitlab_ssl_custom_trusted_certs_enable else '' }}"
+    - |
+      {% if gitlab_ssl_custom_trusted_certs_enable %}
+      perl
+      {% endif %}
 
 # Optional settings.
 gitlab_time_zone: "UTC"
