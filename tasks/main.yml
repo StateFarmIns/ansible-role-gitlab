@@ -13,13 +13,12 @@
 # Install GitLab and its dependencies.
 - name: Install GitLab dependencies.
   package:
-    name: |
-          {% if gitlab_ssl_custom_trusted_certs_enable %}
-          "{{ gitlab_dependencies }}" + [ "{{ gitlab_perl_package }}" ]
-          {% else %}
-          "{{ gitlab_dependencies }}"
-          {% endif %}
-          }}
+    name: >
+      {% if gitlab_ssl_custom_trusted_certs_enable -%}
+      {{ gitlab_dependencies + [gitlab_perl_package] }}
+      {% else -%}
+      {{ gitlab_dependencies }}
+      {% endif %}
     state: present
 
 - name: Install GitLab dependencies (Debian).
@@ -70,17 +69,17 @@
     mode: 0700
   when: gitlab_redirect_http_to_https
 
-# https://docs.gitlab.com/omnibus/settings/ssl.html#install-custom-public-certificates
+# https://docs.gitlab.com/omnibus/settings/ssl.html#other-certificate-authorities
 - name: Copy custom CA certificates to GitLab trusted-certs folder.
   copy:
     src: "{{ item }}"
     dest: /etc/gitlab/trusted-certs/
     owner: root
     group: root
-    mode: 0600
+    mode: 0644
   with_items: "{{ gitlab_ssl_trusted_certs }}"
   when: gitlab_ssl_custom_trusted_certs_enable
-  notify: reload nginx
+  notify: restart gitlab
 
 - name: Create self-signed certificate.
   command: >
@@ -88,7 +87,7 @@
     -days 3650 -keyout {{ gitlab_ssl_certificate_key }} -out {{ gitlab_ssl_certificate }} -extensions v3_ca
     creates={{ gitlab_ssl_certificate }}
   when: gitlab_create_self_signed_cert
-  notify: reload nginx
+  notify: restart gitlab
 
 - name: Copy GitLab configuration file.
   template:

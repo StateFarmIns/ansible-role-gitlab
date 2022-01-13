@@ -5,7 +5,6 @@
 
   vars:
     gitlab_restart_handler_failed_when: false
-    nginx_reload_handler_failed_when: false
 
   pre_tasks:
     - name: Update apt cache.

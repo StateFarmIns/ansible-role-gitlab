@@ -3,9 +3,3 @@
   command: gitlab-ctl reconfigure
   register: gitlab_restart
   failed_when: gitlab_restart_handler_failed_when | bool
-
-# https://docs.gitlab.com/omnibus/settings/nginx.html#update-the-ssl-certificates
-- name: reload nginx
-  command: gitlab-ctl hup nginx registry
-  register: nginx_reload
-  failed_when: nginx_reload_handler_failed_when | bool
