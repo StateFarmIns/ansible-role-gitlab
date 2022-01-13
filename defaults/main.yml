@@ -70,6 +70,7 @@ gitlab_nginx_ssl_client_certificate: ""
 
 # Probably best to leave this as the default, unless doing testing.
 gitlab_restart_handler_failed_when: 'gitlab_restart.rc != 0'
+nginx_reload_handler_failed_when: 'nginx_reload.rc != 0' 
 
 # Dependencies.
 gitlab_dependencies:
@@ -78,7 +79,7 @@ gitlab_dependencies:
     - curl
     - openssl
     - tzdata
-    - "{{ 'perl' if gitlab_ssl_custom_trusted_certs_enable else '' }}"
+    - "{{ 'perl' if gitlab_ssl_custom_trusted_certs_enable else undefined }}"
 
 # Optional settings.
 gitlab_time_zone: "UTC"
