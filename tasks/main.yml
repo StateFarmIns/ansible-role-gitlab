@@ -62,7 +62,16 @@
     owner: root
     group: root
     mode: 0700
-  when: gitlab_create_self_signed_cert
+  when: gitlab_redirect_http_to_https
+
+- name: Copy custom CA certificates to GitLab trusted-certs folder.
+  copy:
+    src: "{{ gitlab_ssl_trusted_certs }}"
+    dest: /etc/gitlab/trusted-certs/
+    owner: root
+    group: root
+    mode: 0600
+  when: gitlab_ssl_custom_trusted_certs_enable
 
 - name: Create self-signed certificate.
   command: >

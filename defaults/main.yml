@@ -12,6 +12,8 @@ gitlab_config_template: "gitlab.rb.j2"
 gitlab_redirect_http_to_https: true
 gitlab_ssl_certificate: "/etc/gitlab/ssl/{{ gitlab_domain }}.crt"
 gitlab_ssl_certificate_key: "/etc/gitlab/ssl/{{ gitlab_domain }}.key"
+gitlab_ssl_custom_trusted_certs_enable: false
+gitlab_ssl_trusted_certs: "{{ ['root_ca.cer', 'int_ca.cer'] if gitlab_ssl_custom_trusted_certs_enable else '' }}"
 
 # SSL Self-signed Certificate Configuration.
 gitlab_create_self_signed_cert: true
@@ -76,6 +78,7 @@ gitlab_dependencies:
     - curl
     - openssl
     - tzdata
+    - "{{ 'perl' if gitlab_ssl_custom_trusted_certs_enable else '' }}"
 
 # Optional settings.
 gitlab_time_zone: "UTC"
