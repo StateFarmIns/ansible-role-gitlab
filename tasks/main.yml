@@ -13,7 +13,12 @@
 # Install GitLab and its dependencies.
 - name: Install GitLab dependencies.
   package:
-    name: "{{ gitlab_dependencies }}"
+    name: |
+          "{{ gitlab_dependencies
+          {% if gitlab_ssl_custom_trusted_certs_enable %}
+          + [ {{ gitlab_perl_package }} ]
+          {% endif %}
+          }}"
     state: present
 
 - name: Install GitLab dependencies (Debian).
