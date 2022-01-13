@@ -66,12 +66,14 @@
 
 - name: Copy custom CA certificates to GitLab trusted-certs folder.
   copy:
-    src: "{{ gitlab_ssl_trusted_certs }}"
+    src: "{{ item }}"
     dest: /etc/gitlab/trusted-certs/
     owner: root
     group: root
     mode: 0600
+  with_items: "{{ gitlab_ssl_trusted_certs }}"
   when: gitlab_ssl_custom_trusted_certs_enable
+  notify: restart gitlab
 
 - name: Create self-signed certificate.
   command: >
